@@ -31,8 +31,8 @@ FIELD
 %br
 = link_to 'BATTLE!!', '/game/battle'
 .field
-  - player.field_hamsters.each do
-    +
+  - player.field_hamsters.each do |ham|
+    = ham.wins
 
 %p
   = user_data.player.name
