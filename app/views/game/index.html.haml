@@ -1,4 +1,6 @@
 %p
+  とある国では頬袋により多くを入れるものが尊敬され地位を得るのだという
+%p
   = link_to 'add a hamster', '/game/add/1'
   = link_to 'add 10', '/game/add/10'
   = link_to 'add 100', '/game/add/100'
@@ -9,7 +11,7 @@
     %th{width: 70} field
   - 10.times do |rank|
     %tr
-      %td= rank
+      %td= Hamster.rank_name rank
       %td
         = num = player.hamsters_with_rank(rank).size
         %br

@@ -82,4 +82,8 @@ class Hamster < OpenStruct
       self.rank += 1
     end  
   end
+
+  def self.rank_name(rank)
+    %w(野生ハム 村人 たね集め 足軽 ドワーフ メイドさん 鍛冶屋 狩人 戦士 遊び人 - - - - - - 将軍 キング)[rank]
+  end
 end
