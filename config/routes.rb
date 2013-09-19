@@ -1,5 +1,9 @@
 Ham0::Application.routes.draw do
-  get "game/index"
+  get "game/field/:rank/:num" => "game#field"
+  get "game/escape/:rank" => "game#escape"
+  get "game/add/:num" => "game#add"
+  get "game/battle"
+  get "game/reset"
   root 'game#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

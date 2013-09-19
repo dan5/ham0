@@ -1,5 +1,39 @@
-%h1 Game#index
-%p Find me in app/views/game/index.html.haml
+%p
+  = link_to 'add a hamster', '/game/add/1'
+  = link_to 'add 10', '/game/add/10'
+  = link_to 'add 100', '/game/add/100'
+%table
+  %tr
+    %th rank
+    %th{width: 70} home
+    %th{width: 70} field
+  - 10.times do |rank|
+    %tr
+      %td= rank
+      %td
+        = num = player.hamsters_with_rank(rank).size
+        %br
+        - if num > 0
+          = link_to '出撃»', "/game/field/#{rank}/#{num}"
+          = link_to '1»', "/game/field/#{rank}/1"
+        - else
+          = '---'
+      %td
+        = num = player.field_hamsters_with_rank(rank).size
+        %br
+        - if num > 0
+          = link_to '«撤退', "/game/escape/#{rank}"
+        - else
+          = '---'
 
-%p= session[:login]
-%p= user_data.player.name
+%br
+FIELD
+%br
+= link_to 'BATTLE!!', '/game/battle'
+.field
+  - player.field_hamsters.each do
+    +
+
+%p
+  = user_data.player.name
+  = link_to 'reset', '/game/reset'

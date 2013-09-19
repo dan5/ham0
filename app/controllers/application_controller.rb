@@ -3,13 +3,22 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_filter {|c|
+  before_filter {
     session[:login] ||= uniq_string
-    @user_data = UserData.find_or_create_by_login(session[:login]).set_default_params.data
+    @user_data = UserData.find_or_create_by_login(session[:login]).set_default_params
   }
 
+  after_filter {
+    @user_data.save!
+  }
+
+  def player
+    user_data.player
+  end
+  helper_method :player
+
   def user_data
-    @user_data
+    @user_data.data
   end
   helper_method :user_data
 
