@@ -30,8 +30,8 @@ class Player
   end
 
   def unzip
-    @hamsters = @hamsters_data.unpack("C*").map {|v| Hamster.unzip(v) }
-    @field_hamsters = @field_hamsters_data.unpack("C*").map {|v| Hamster.unzip(v) }
+    @hamsters = (@hamsters_data or "").unpack("C*").map {|v| Hamster.unzip(v) }
+    @field_hamsters = (@field_hamsters_data or "").unpack("C*").map {|v| Hamster.unzip(v) }
   end
 
   def move_to_field(rank, num)
