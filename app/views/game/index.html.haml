@@ -4,6 +4,7 @@
   = link_to 'add a hamster', '/game/add/1'
   = link_to 'add 10', '/game/add/10'
   = link_to 'add 100', '/game/add/100'
+  = link_to 'add 1000', '/game/add/1000'
 %table
   %tr
     %th rank
@@ -11,7 +12,7 @@
     %th{width: 70} field
   - 10.times do |rank|
     %tr
-      %td= Hamster.rank_name rank
+      %th= Hamster.rank_name rank
       %td
         = num = player.hamsters_with_rank(rank).size
         %br
@@ -33,8 +34,13 @@ FIELD
 %br
 = link_to 'BATTLE!!', '/game/battle'
 .field
-  - player.field_hamsters.each do |ham|
+  - max = 100
+  - num = player.field_hamsters.count
+  - player.field_hamsters.first(max).each do |ham|
     = ham.wins
+  - if num > max
+    %br
+    非表示のハム#{num - max}がいます。
 
 %p
   = user_data.player.name

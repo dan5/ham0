@@ -6,9 +6,11 @@ class ApplicationController < ActionController::Base
   before_filter {
     session[:login] ||= uniq_string
     @user_data = UserData.find_or_create_by_login(session[:login]).set_default_params
+    player.unzip
   }
 
   after_filter {
+    player.zip
     @user_data.save!
   }
 

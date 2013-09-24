@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class UserData < ActiveRecord::Base
   serialize :data
 
@@ -9,14 +11,27 @@ class UserData < ActiveRecord::Base
   end
 end
 
-require 'ostruct'
-
-class Player < OpenStruct
+class Player
+  attr_accessor :name
+  attr_accessor :hamsters
+  attr_accessor :field_hamsters
   def set_default_params
     self.name ||= 'dgames'
     self.hamsters ||= []
     self.field_hamsters ||= []
     self
+  end
+
+  def zip
+    @hamsters_data = hamsters.map(&:serialize).pack("C*")
+    @field_hamsters_data = field_hamsters.map(&:serialize).pack("C*")
+    @hamsters = nil
+    @field_hamsters = nil
+  end
+
+  def unzip
+    @hamsters = @hamsters_data.unpack("C*").map {|v| Hamster.unzip(v) }
+    @field_hamsters = @field_hamsters_data.unpack("C*").map {|v| Hamster.unzip(v) }
   end
 
   def move_to_field(rank, num)
@@ -54,17 +69,31 @@ class Player < OpenStruct
     field_hamsters.select {|e| e.rank == rank }
   end
 
-  def create_hamster(params = {})
-    field_hamsters << Hamster.new(params).set_default_params
+  def create_hamster()
+    field_hamsters << Hamster.new(0, 0).set_default_params
   end
 end
 
-class Hamster < OpenStruct
+class Hamster
+  attr_accessor :rank
+  attr_accessor :wins
+
+  def initialize(rank, wins)
+    @rank = rank
+    @wins = wins
+  end
+
   def set_default_params
-    self.rank ||= 0
-    self.wins ||= 0
-    self.uid ||= rand(999_999_999_999)
     self
+  end
+
+  def serialize
+    48 + rank * 3 + wins
+  end
+
+  def self.unzip(v)
+    a = v - 48
+    Hamster.new(a / 3, a % 3)
   end
 
   def dead?
