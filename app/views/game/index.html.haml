@@ -1,46 +1,50 @@
 %p
   とある国では頬袋により多くを入れるものが尊敬され地位を得るのだという
-%p
+%p.debug
   = link_to 'add a hamster', '/game/add/1'
   = link_to 'add 10', '/game/add/10'
   = link_to 'add 100', '/game/add/100'
   = link_to 'add 1000', '/game/add/1000'
-%table
-  %tr
-    %th rank
-    %th{width: 70} home
-    %th{width: 70} field
-  - 10.times do |rank|
-    %tr
-      %th= Hamster.rank_name rank
-      %td
-        = num = player.hamsters_with_rank(rank).size
-        %br
-        - if num > 0
-          = link_to '出撃»', "/game/field/#{rank}/#{num}"
-          = link_to '1»', "/game/field/#{rank}/1"
-        - else
-          = '---'
-      %td
-        = num = player.field_hamsters_with_rank(rank).size
-        %br
-        - if num > 0
-          = link_to '«撤退', "/game/escape/#{rank}"
-        - else
-          = '---'
 
-%br
-FIELD
-%br
-= link_to 'BATTLE!!', '/game/battle'
-.field
-  - max = 100
-  - num = player.field_hamsters.count
-  - player.field_hamsters.first(max).each do |ham|
-    = ham.wins
-  - if num > max
-    %br
-    非表示のハム#{num - max}がいます。
+
+%table.main
+  %tr
+    %td
+      %table.hamstar_rank
+        %tr
+          %th rank
+          %th.home{width: 70} home
+          %th.field{width: 70} field
+        - 10.times do |rank|
+          %tr
+            %th= Hamster.rank_name rank
+            %td.home.right
+              .num= num = player.hamsters_with_rank(rank).size
+              - if num > 0
+                = link_to '出撃»', "/game/field/#{rank}/#{num}"
+                = link_to '1»', "/game/field/#{rank}/1"
+              - else
+                = '---'
+            %td.field.right
+              .num= num = player.field_hamsters_with_rank(rank).size
+              - if num > 0
+                = link_to '«撤退', "/game/escape/#{rank}"
+              - else
+                = '---'
+      
+    %td.field_area
+      .center.large FIELD
+      .hamstars
+        - max = 100
+        - num = player.field_hamsters.count
+        - player.field_hamsters.first(max).each do |ham|
+          = ham.wins
+        - if num > max
+          %br
+          非表示のハム
+          %b>= num - max
+          匹がいます。
+      .center.large= link_to 'BATTLE!!', '/game/battle'
 
 %p
   = user_data.player.name

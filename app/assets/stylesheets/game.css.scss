@@ -1,9 +1,66 @@
 // Place all the styles related to the game controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
-td, th {
-  border: 1px solid #f8f8f8;
-  border-bottom: 1px solid #ccc;
+.top { vertical-align: top; }
+.middle { vertical-align: middle; }
+.bottom { vertical-align: bottom; }
+.left { text-align: left; }
+.right { text-align: right; }
+.center { text-align: center; }
+.gray { color: #888888; }
+.red { color: red; }
+.blue { color: blue; }
+.green { color: green; }
+.bold { font-weight: bold; }
+.weight_normal { font-weight: normal; }
+.nowrap { white-space: nowrap; }
+.small {
+  font-size: 75%;
+  line-height: 1.62;
+}
+.large {
+  font-size: 30px;
+  line-height: 1.4;
+}
+.xlarge {
+  font-size: 36px;
 }
 
+table.main {
+  table.hamstar_rank {
+    td, th {
+      border: 1px solid #f8f8f8;
+      border-bottom: 1px solid #ccc;
+      white-space: nowrap;
+      .num {
+        font-size: 30px;
+        font-weight: bold;
+      }
+    }
+    td.home, th.home {
+      color: gray;
+    }
+    td.field, th.field {
+      color: blue;
+    }
+  }
+  td.field_area {
+    padding: 0px 16px;
+    vertical-align: top;
+    color: green;
+    .hamstars {
+      font-size: 40px;
+      font-weight: bold;
+    }
+  }
+}
+
+a {
+  color: #666;
+  &:visited {
+    color: #666; }
+  &:hover {
+    color: #000;
+    font-weight: bold;
+  }
+}

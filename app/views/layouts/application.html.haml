@@ -1,0 +1,12 @@
+!!! XML
+!!! 1.1
+%html{"xml:lang" => "ja", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title ham0
+    = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = csrf_meta_tags
+    - width = request.env["HTTP_USER_AGENT"][/ipad/i] ? 640 : 320
+    <meta name="viewport" content="width=#{width}" />
+
+= yield
