@@ -1,11 +1,14 @@
 %p
   とある国では頬袋により多くを入れるものが尊敬され地位を得るのだという
-%p.debug
-  = link_to 'add a hamster', '/game/add/1'
-  = link_to 'add 10', '/game/add/10'
-  = link_to 'add 100', '/game/add/100'
-  = link_to 'add 1000', '/game/add/1000'
 
+%p.debug
+  debug:
+  = link_to '時間進行', '/game/add/1'
+  = link_to 'add 1', '/game/add/1'
+  = link_to '10', '/game/add/10'
+  = link_to '100', '/game/add/100'
+  = link_to '1000', '/game/add/1000'
+  = link_to '10000', '/game/add/10000'
 
 %table.main
   %tr
@@ -32,19 +35,23 @@
               - else
                 = '---'
       
-    %td.field_area
-      .center.large FIELD
-      .hamstars
-        - max = 100
-        - num = player.field_hamsters.count
-        - player.field_hamsters.first(max).each do |ham|
-          = ham.wins
-        - if num > max
-          %br
-          非表示のハム
-          %b>= num - max
-          匹がいます。
-      .center.large= link_to 'BATTLE!!', '/game/battle'
+    %td.right_side
+      .commands
+        コマンド:
+        = link_to '探す', '/game/add/10'
+      .field_area
+        .center.large FIELD
+        .hamstars
+          - max = 100
+          - num = player.field_hamsters.count
+          - player.field_hamsters.first(max).each do |ham|
+            = ham.wins
+          - if num > max
+            %br
+            非表示のハム
+            %b>= num - max
+            匹がいます。
+        .center.large= link_to 'BATTLE!!', '/game/battle'
 
 %p
   = user_data.player.name

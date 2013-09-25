@@ -28,6 +28,7 @@
 
 table.main {
   table.hamstar_rank {
+    width: 240px;
     td, th {
       border: 1px solid #f8f8f8;
       border-bottom: 1px solid #ccc;
@@ -44,13 +45,14 @@ table.main {
       color: blue;
     }
   }
-  td.field_area {
-    padding: 0px 16px;
+  td.right_side {
+    padding: 4px 16px;
     vertical-align: top;
-    color: green;
-    .hamstars {
-      font-size: 40px;
-      font-weight: bold;
+    .field_area {
+      .hamstars {
+        font-size: 20px;
+        font-weight: bold;
+      }
     }
   }
 }
