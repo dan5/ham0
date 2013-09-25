@@ -13,12 +13,15 @@ end
 
 class Player
   attr_accessor :name
-  attr_accessor :hamsters
-  attr_accessor :field_hamsters
+  attr_accessor :hamsters, :field_hamsters
+  attr_accessor :actions, :foods, :wilds
   def set_default_params
-    self.name ||= 'dgames'
-    self.hamsters ||= []
-    self.field_hamsters ||= []
+    @name ||= 'dgames'
+    @hamsters ||= []
+    @field_hamsters ||= []
+    @actions ||= []
+    @foods ||= 1000
+    @wilds ||= 10
     self
   end
 
@@ -34,7 +37,23 @@ class Player
     @field_hamsters = (@field_hamsters_data or "").unpack("C*").map {|v| Hamster.unzip(v) }
   end
 
+  def update
+    @wilds += 10
+    @foods -= (@hamsters.size + @field_hamsters.size) / 100 + 1
+    10.times do |rank|
+      n = hamsters_with_rank(rank).size
+      actions[rank] ||= 0
+      actions[rank] += n / 10.0
+    end
+  end
+
+  def hunt
+    @wilds.times { create_hamster }
+    @wilds = 0
+  end
+
   def act(rank)
+    @wilds += 100
   end
 
   def move_to_field(rank, num)

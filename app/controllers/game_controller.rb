@@ -10,6 +10,16 @@ class GameController < ApplicationController
     redirect_to '/'
   end
 
+  def update
+    player.update
+    redirect_to '/'
+  end
+
+  def hunt
+    player.hunt
+    redirect_to '/'
+  end
+
   def act
     player.act params[:rank].to_i
     redirect_to '/'

@@ -1,14 +1,10 @@
 %p
   とある国では頬袋により多くを入れるものが尊敬され地位を得るのだという
 
-%p.debug
-  debug:
-  = link_to '時間進行', '/game/add/1'
-  = link_to 'add 1', '/game/add/1'
-  = link_to '10', '/game/add/10'
-  = link_to '100', '/game/add/100'
-  = link_to '1000', '/game/add/1000'
-  = link_to '10000', '/game/add/10000'
+%p
+  foods: #{player.foods}
+  hams: #{player.hamsters.size + player.field_hamsters.size}
+  wilds: #{player.wilds}
 
 %table.main
   %tr
@@ -20,7 +16,12 @@
           %th.field{width: 70} field
         - 10.times do |rank|
           %tr
-            %th= link_to Hamster.rank_name(rank), "/game/act/#{rank}"
+            %th
+              = Hamster.rank_name(rank)
+              .items
+                - items = player.actions[rank].to_i
+                - if items > 0
+                  = link_to "アイテム(#{items})", "/game/act/#{rank}"
             %td.home.right
               .num= num = player.hamsters_with_rank(rank).size
               - if num > 0
@@ -38,7 +39,7 @@
     %td.right_side
       .commands
         コマンド:
-        = link_to '探す', '/game/add/10'
+        = link_to "探す#{player.wilds}", '/game/hunt'
       .field_area
         .center.large FIELD
         .hamstars
@@ -52,6 +53,15 @@
             %b>= num - max
             匹がいます。
         .center.large= link_to 'BATTLE!!', '/game/battle'
+
+%p.debug
+  debug:
+  = link_to '時間進行', '/game/update/1'
+  = link_to 'add 1', '/game/add/1'
+  = link_to '10', '/game/add/10'
+  = link_to '100', '/game/add/100'
+  = link_to '1000', '/game/add/1000'
+  = link_to '10000', '/game/add/10000'
 
 %p
   = user_data.player.name
