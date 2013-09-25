@@ -20,7 +20,7 @@
           %th.field{width: 70} field
         - 10.times do |rank|
           %tr
-            %th= Hamster.rank_name rank
+            %th= link_to Hamster.rank_name(rank), "/game/act/#{rank}"
             %td.home.right
               .num= num = player.hamsters_with_rank(rank).size
               - if num > 0

@@ -23,8 +23,8 @@ class Player
   end
 
   def zip
-    @hamsters_data = hamsters.map(&:serialize).pack("C*")
-    @field_hamsters_data = field_hamsters.map(&:serialize).pack("C*")
+    @hamsters_data = hamsters.map(&:zip).pack("C*")
+    @field_hamsters_data = field_hamsters.map(&:zip).pack("C*")
     @hamsters = nil
     @field_hamsters = nil
   end
@@ -32,6 +32,9 @@ class Player
   def unzip
     @hamsters = (@hamsters_data or "").unpack("C*").map {|v| Hamster.unzip(v) }
     @field_hamsters = (@field_hamsters_data or "").unpack("C*").map {|v| Hamster.unzip(v) }
+  end
+
+  def act(rank)
   end
 
   def move_to_field(rank, num)
@@ -69,8 +72,8 @@ class Player
     field_hamsters.select {|e| e.rank == rank }
   end
 
-  def create_hamster()
-    field_hamsters << Hamster.new(0, 0).set_default_params
+  def create_hamster
+    field_hamsters << Hamster.new(0, 0)
   end
 end
 
@@ -83,11 +86,7 @@ class Hamster
     @wins = wins
   end
 
-  def set_default_params
-    self
-  end
-
-  def serialize
+  def zip
     48 + rank * 3 + wins
   end
 

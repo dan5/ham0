@@ -25,6 +25,6 @@ class ApplicationController < ActionController::Base
   helper_method :user_data
 
   def uniq_string
-    rand(999_999_999_999_999).to_s(36)
+    rand(999_999_999_999_999).to_s(36) # trap:
   end
 end

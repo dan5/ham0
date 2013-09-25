@@ -1,4 +1,5 @@
 Ham0::Application.routes.draw do
+  get "game/act/:rank" => "game#act"
   get "game/field/:rank/:num" => "game#field"
   get "game/escape/:rank" => "game#escape"
   get "game/add/:num" => "game#add"

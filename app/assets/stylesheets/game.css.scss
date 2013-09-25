@@ -1,6 +1,7 @@
 // Place all the styles related to the game controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
 .top { vertical-align: top; }
 .middle { vertical-align: middle; }
 .bottom { vertical-align: bottom; }
@@ -50,8 +51,6 @@ table.main {
     vertical-align: top;
     .field_area {
       .hamstars {
-        font-size: 20px;
-        font-weight: bold;
       }
     }
   }
@@ -60,9 +59,9 @@ table.main {
 a {
   color: #666;
   &:visited {
-    color: #666; }
+    color: #666;
+  }
   &:hover {
     color: #000;
-    font-weight: bold;
   }
 }

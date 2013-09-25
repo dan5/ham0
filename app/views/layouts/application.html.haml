@@ -7,6 +7,6 @@
     = javascript_include_tag "application", "data-turbolinks-track" => true
     = csrf_meta_tags
     - width = request.env["HTTP_USER_AGENT"][/ipad/i] ? 640 : 320
-    <meta name="viewport" content="width=#{width}" />
+    %meta{name: "viewport", content: "width=#{width}"}
 
 = yield
