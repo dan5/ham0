@@ -47,6 +47,7 @@ table.main {
     }
   }
   td.right_side {
+    width: 100%;
     padding: 4px 16px;
     vertical-align: top;
     .field_area {
@@ -58,10 +59,13 @@ table.main {
 
 a {
   color: #666;
-  &:visited {
-    color: #666;
-  }
-  &:hover {
-    color: #000;
-  }
+  &:visited { color: #666; }
+  &:hover { color: #000; }
+}
+
+.debug {
+  border: 2px solid #88f;
+  background-color: #88f;
+  color: #fff;
+  a { color: #fff; }
 }

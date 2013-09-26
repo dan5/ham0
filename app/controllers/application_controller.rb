@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   }
 
   after_filter {
-    player.zip
+    player.zip if player
     @user_data.save!
   }
 
