@@ -123,7 +123,14 @@ class Hamster
       item: '弓矢',
       item_act: lambda {|c| c.wilds += 100 }
     },
-    ドワーフ: {},
+    ドワーフ: {
+      item: '金塊',
+      #item_act: lambda {|c| c.golds += 100 }
+    },
+    キング: {
+      item: '平和',
+      #item_act: lambda {|c| c.golds += 100 }
+    },
   }
 
   attr_accessor :rank
