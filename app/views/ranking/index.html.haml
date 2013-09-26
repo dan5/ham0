@@ -1,0 +1,15 @@
+%h1 Ranking
+
+%table.ranking
+  %tr
+    %th rank
+    %th name
+    %th score
+    %th login
+  - @players.each.with_index do |rec, i|
+    - player, login = rec
+    %tr
+      %th= i + 1
+      %td= player.name
+      %td.right= player.rounded_score
+      %td= link_to login, "/ranking/login/#{login}"

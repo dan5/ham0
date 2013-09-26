@@ -15,6 +15,7 @@ class Player
   attr_accessor :name
   attr_accessor :hamsters, :field_hamsters
   attr_accessor :items, :foods, :wilds, :seeds, :action_num
+  attr_accessor :score
   def set_default_params
     @name ||= 'dgames'
     @hamsters ||= []
@@ -24,14 +25,21 @@ class Player
     @wilds ||= 10
     @seeds ||= 10
     @action_num ||= 1000
+    @score ||= 0
     self
   end
 
   def zip
+    num = hamsters.size + field_hamsters.size
+    @score = (0..10).inject(0) {|t, rank| t + all_hamsters_with_rank(rank).size ** rank }
     @hamsters_data = hamsters.map(&:zip).pack("C*")
     @field_hamsters_data = field_hamsters.map(&:zip).pack("C*")
     @hamsters = nil
     @field_hamsters = nil
+  end
+
+  def rounded_score
+    @score.to_f.round(1)
   end
 
   def unzip
@@ -106,6 +114,10 @@ class Player
     hams = field_hamsters_with_rank(rank)
     self.field_hamsters -= hams
     self.hamsters += hams
+  end
+
+  def all_hamsters_with_rank(rank)
+    hamsters_with_rank(rank) + field_hamsters_with_rank(rank)
   end
 
   def hamsters_with_rank(rank)

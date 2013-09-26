@@ -1,13 +1,11 @@
-%p.debug
-  DEBUG MODE
-
-%p
+%p.small
   とある国では頬袋により多くを入れるものが尊敬され地位を得るのだという
 
 %p.status
   食料:#{player.foods}
   総ハム数:#{player.hamsters.size + player.field_hamsters.size}
   行動力:#{player.action_num}
+  スコア:#{player.rounded_score}
 
 %p.commands
   %span.command= link_to 'バトル！', '/game/battle'
@@ -63,17 +61,3 @@
             非表示のハム
             %b>= num - max
             匹がいます。
-
-%p
-  = user_data.player.name
-  = link_to 'reset', '/game/reset'
-
-%p.debug
-  DEBUG:
-  = link_to '時間進行', '/game/update/1'
-  = link_to 'add 1', '/game/add/1'
-  = link_to '10', '/game/add/10'
-  = link_to '100', '/game/add/100'
-  = link_to '1000', '/game/add/1000'
-  = link_to '10000', '/game/add/10000'
-

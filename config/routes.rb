@@ -1,4 +1,6 @@
 Ham0::Application.routes.draw do
+  get "ranking" => "ranking#index"
+  get "ranking/login/:login" => "ranking#login"
   get "game/update/:times" => "game#update"
   get "game/work" => "game#work"
   get "game/hunt" => "game#hunt"
