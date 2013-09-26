@@ -11,9 +11,9 @@
   とある国では頬袋により多くを入れるものが尊敬され地位を得るのだという
 
 %p
-  foods: #{player.foods}
-  hams: #{player.hamsters.size + player.field_hamsters.size}
-  wilds: #{player.wilds}
+  食料: #{player.foods}
+  総ハム数: #{player.hamsters.size + player.field_hamsters.size}
+  行動力: #{player.action_num}
 
 %table.main
   %tr
@@ -23,14 +23,15 @@
           %th rank
           %th.home{width: 70} home
           %th.field{width: 70} field
-        - 10.times do |rank|
+        - Hamster::Data.each.with_index do |data, rank|
+          - name, values = data
           %tr
             %th
-              = Hamster.rank_name(rank)
+              = name
               .items
-                - items = player.actions[rank].to_i
-                - if items > 0
-                  = link_to "アイテム(#{items})", "/game/act/#{rank}"
+                - item_num = player.items[rank].to_i
+                - if item_num > 0
+                  = link_to "#{values[:item]}(#{item_num})", "/game/act/#{rank}"
             %td.home.right
               .num= num = player.hamsters_with_rank(rank).size
               - if num > 0
@@ -48,7 +49,9 @@
     %td.right_side
       .commands
         コマンド:
-        = link_to "探す#{player.wilds}", '/game/hunt'
+        = link_to "仲間を探す(#{player.wilds})", '/game/hunt'
+        = link_to '生産する', '/game/update/1'
+        = link_to 'バトル!', '/game/battle'
       .field_area
         .center.large FIELD
         .hamstars
@@ -61,7 +64,6 @@
             非表示のハム
             %b>= num - max
             匹がいます。
-        .center.large= link_to 'BATTLE!!', '/game/battle'
 
 %p
   = user_data.player.name

@@ -14,14 +14,15 @@ end
 class Player
   attr_accessor :name
   attr_accessor :hamsters, :field_hamsters
-  attr_accessor :actions, :foods, :wilds
+  attr_accessor :items, :foods, :wilds, :action_num
   def set_default_params
     @name ||= 'dgames'
     @hamsters ||= []
     @field_hamsters ||= []
-    @actions ||= []
+    @items ||= []
     @foods ||= 1000
     @wilds ||= 10
+    @action_num ||= 1000
     self
   end
 
@@ -38,14 +39,15 @@ class Player
   end
 
   def update
+    @action_num -= 1
     @wilds += 10
     @foods -= (@hamsters.size + @field_hamsters.size) / 100 + 1
     if @foods > 0
       (1..10).each do |rank|
         n = hamsters_with_rank(rank).size
-        actions[rank] ||= 0
-        actions[rank] += n / 10.0
-        actions[rank] = [actions[rank], 99].min
+        items[rank] ||= 0
+        items[rank] += n / 10.0
+        items[rank] = [items[rank], 99].min
       end
     else
       @foods = 0
@@ -53,14 +55,20 @@ class Player
   end
 
   def hunt
+    @action_num -= 1
     @wilds.times { create_hamster }
-    @wilds = 0
+    @wilds = 10
   end
 
   def act(rank)
-    num = actions[rank].to_i
-    @wilds += num * 100
-    actions[rank] = 0
+    @action_num -= 1
+    num = items[rank].to_i
+    if num > 0
+      items[rank] -= 1
+      if item_act = Hamster::Data.values[rank][:item_act]
+        item_act.call(self)
+      end
+    end
   end
 
   def move_to_field(rank, num)
@@ -76,6 +84,7 @@ class Player
   end
 
   def battle
+    @action_num -= 1
     hams = field_hamsters
     hams.shuffle!
     (hams.size / 2).times do |i|
@@ -104,6 +113,19 @@ class Player
 end
 
 class Hamster
+  Data = {
+    野良ハム: {},
+    タネ農家: {
+      item: 'タネ',
+      item_act: lambda {|c| c.foods += 100 }
+    },
+    狩人: {
+      item: '弓矢',
+      item_act: lambda {|c| c.wilds += 100 }
+    },
+    ドワーフ: {},
+  }
+
   attr_accessor :rank
   attr_accessor :wins
 
