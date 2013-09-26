@@ -14,7 +14,7 @@ end
 class Player
   attr_accessor :name
   attr_accessor :hamsters, :field_hamsters
-  attr_accessor :items, :foods, :wilds, :seeds, :action_num
+  attr_accessor :items, :foods, :golds, :wilds, :seeds, :action_num
   attr_accessor :score
   def set_default_params
     @name ||= 'dgames'
@@ -22,6 +22,7 @@ class Player
     @field_hamsters ||= []
     @items ||= []
     @foods ||= 100
+    @golds ||= 10000
     @wilds ||= 10
     @seeds ||= 10
     @action_num ||= 1000
@@ -32,8 +33,8 @@ class Player
   def zip
     num = hamsters.size + field_hamsters.size
     @score = (0..10).inject(0) {|t, rank| t + all_hamsters_with_rank(rank).size ** rank }
-    @hamsters_data = hamsters.map(&:zip).pack("C*")
-    @field_hamsters_data = field_hamsters.map(&:zip).pack("C*")
+    @hamsters_data = hamsters.map(&:zip).join
+    @field_hamsters_data = field_hamsters.map(&:zip).join
     @hamsters = nil
     @field_hamsters = nil
   end
@@ -43,8 +44,8 @@ class Player
   end
 
   def unzip
-    @hamsters = (@hamsters_data or "").unpack("C*").map {|v| Hamster.unzip(v) }
-    @field_hamsters = (@field_hamsters_data or "").unpack("C*").map {|v| Hamster.unzip(v) }
+    @hamsters = (@hamsters_data or "").scan(/../).map {|v| Hamster.unzip(v) }
+    @field_hamsters = (@field_hamsters_data or "").scan(/../).map {|v| Hamster.unzip(v) }
   end
 
   def update
@@ -65,8 +66,11 @@ class Player
 
   def hunt
     @action_num -= 1
-    @wilds.times { create_hamster }
-    @wilds = 10
+    n = [@wilds, @golds].min
+    n.times { create_hamster }
+    @golds -= n
+    @wilds -= n
+    @wilds = [@wilds, 10].max
   end
 
   def harvest
@@ -129,7 +133,7 @@ class Player
   end
 
   def create_hamster
-    field_hamsters << Hamster.new(0, 0)
+    field_hamsters << Hamster.new
   end
 
   private
@@ -146,6 +150,10 @@ class Hamster
       item: '壺',
       item_act: lambda {|c| c.wilds += 10 }
     },
+    スミス: {
+      item: '銅の剣',
+      item_act: lambda {|c| c.golds += 100 }
+    },
     タネ農家: {
       item: 'タネ',
       item_act: lambda {|c| c.seeds += 10 }
@@ -156,29 +164,44 @@ class Hamster
     },
     ドワーフ: {
       item: '金塊',
-      #item_act: lambda {|c| c.golds += 100 }
+      item_act: lambda {|c| c.golds += 100 }
     },
+
+    猛獣使い: {},
+    足軽: {},
+    メイド: {},
+    戦士: {},
+    遊び人: {},
+    将軍: {},
+    アイドル: {},
+
     キング: {
       item: '平和',
       #item_act: lambda {|c| c.golds += 100 }
     },
   }
 
-  attr_accessor :rank
-  attr_accessor :wins
+  attr_accessor :rank, :wins, :str_plus
 
-  def initialize(rank, wins)
+  def initialize(rank = 0, wins = 0, str_plus = 0)
     @rank = rank
     @wins = wins
+    @str_plus = str_plus
   end
 
   def zip
-    48 + rank * 3 + wins
+    p0 = rank * 3 + wins
+    p1 = str_plus
+    [p0, p1].pack("Cc")
   end
 
   def self.unzip(v)
-    a = v - 48
-    Hamster.new(a / 3, a % 3)
+    p0, p1 = v.unpack("Cc")
+    Hamster.new(p0 / 3, p0 % 3, p1)
+  end
+
+  def display
+    str_plus == 0 ? wins.to_s : "#{wins}(#{str_plus})"
   end
 
   def dead?
@@ -195,9 +218,5 @@ class Hamster
       self.wins = 0
       self.rank += 1
     end  
-  end
-
-  def self.rank_name(rank)
-    %w(野生ハム 村人 たね集め 足軽 ドワーフ メイドさん 鍛冶屋 狩人 戦士 遊び人 - - - - - - 将軍 キング)[rank]
   end
 end

@@ -3,14 +3,14 @@
 
 %p.status
   食料:#{player.foods}
-  総ハム数:#{player.hamsters.size + player.field_hamsters.size}
+  お金:#{player.golds}
   行動力:#{player.action_num}
   スコア:#{player.rounded_score}
 
 %p.commands
   %span.command= link_to 'バトル！', '/game/battle'
   %span.command
-    - if player.foods > 0
+    - if player.foods > 0 and player.hamsters.size > 0
       = link_to '仕事をする', '/game/work'
     - else
       仕事をする
@@ -23,7 +23,7 @@
       %table.hamstar_rank
         %tr
           %th rank
-          %th.home{width: 70} home
+          %th.town{width: 70} town
           %th.field{width: 70} field
         - Hamster::Data.each.with_index do |data, rank|
           - name, values = data
@@ -34,7 +34,7 @@
                 - item_num = player.items[rank].to_i
                 - if item_num > 0
                   = link_to "#{values[:item]}(#{item_num})", "/game/use_item/#{rank}"
-            %td.home.right
+            %td.town.right
               .num= num = player.hamsters_with_rank(rank).size
               - if num > 0
                 = link_to '出撃»', "/game/field/#{rank}/#{num}"
@@ -55,7 +55,7 @@
           - max = 100
           - num = player.field_hamsters.count
           - player.field_hamsters.first(max).each do |ham|
-            = ham.wins
+            = ham.display
           - if num > max
             %br
             非表示のハム

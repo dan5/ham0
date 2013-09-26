@@ -12,14 +12,14 @@
 %p.debug
   DEBUG MODE
 
-= yield
-
-%p.footer
-  = link_to 'ham0', '/'
+.header.right
+  = link_to 'home', '/'
   = link_to 'ranking', '/ranking'
   = '/'
   = user_data.player.name
   = link_to 'reset', '/game/reset'
+
+= yield
 
 %p.debug
   DEBUG:

@@ -2,14 +2,19 @@
 
 %table.ranking
   %tr
-    %th rank
-    %th name
-    %th score
-    %th login
+    %th 順位
+    %th プレイヤー名
+    %th スコア
+    %th 食料
+    %th お金
+    %th 行動力
+    %th ログイン
   - @players.each.with_index do |rec, i|
     - player, login = rec
     %tr
       %th= i + 1
       %td= player.name
       %td.right= player.rounded_score
+      %td.right= player.foods
+      %td.right= player.action_num
       %td= link_to login, "/ranking/login/#{login}"
