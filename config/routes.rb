@@ -1,7 +1,9 @@
 Ham0::Application.routes.draw do
   get "game/update/:times" => "game#update"
+  get "game/work" => "game#work"
   get "game/hunt" => "game#hunt"
-  get "game/act/:rank" => "game#act"
+  get "game/harvest" => "game#harvest"
+  get "game/use_item/:rank" => "game#use_item"
   get "game/field/:rank/:num" => "game#field"
   get "game/escape/:rank" => "game#escape"
   get "game/add/:num" => "game#add"

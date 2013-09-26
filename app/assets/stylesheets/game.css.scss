@@ -30,8 +30,9 @@
 .commands {
   span.command {
     margin-right: 4px;
-    font-weight: bold;
+    color: #aaa;
     a {
+      font-weight: bold;
       color: #86f;
       &:visited { color: #86f; }
       &:hover { color: #a8f; }

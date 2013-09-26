@@ -15,13 +15,23 @@ class GameController < ApplicationController
     redirect_to '/'
   end
 
+  def use_item
+    player.use_item params[:rank].to_i
+    redirect_to '/'
+  end
+
   def hunt
     player.hunt
     redirect_to '/'
   end
 
-  def act
-    player.act params[:rank].to_i
+  def harvest
+    player.harvest
+    redirect_to '/'
+  end
+
+  def work
+    player.work
     redirect_to '/'
   end
 

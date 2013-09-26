@@ -14,14 +14,15 @@ end
 class Player
   attr_accessor :name
   attr_accessor :hamsters, :field_hamsters
-  attr_accessor :items, :foods, :wilds, :action_num
+  attr_accessor :items, :foods, :wilds, :seeds, :action_num
   def set_default_params
     @name ||= 'dgames'
     @hamsters ||= []
     @field_hamsters ||= []
     @items ||= []
-    @foods ||= 1000
+    @foods ||= 100
     @wilds ||= 10
+    @seeds ||= 10
     @action_num ||= 1000
     self
   end
@@ -39,18 +40,18 @@ class Player
   end
 
   def update
-    @action_num -= 1
+    @action_num += 10
     @wilds += 10
-    @foods -= (@hamsters.size + @field_hamsters.size) / 100 + 1
-    if @foods > 0
-      (0..10).each do |rank|
-        n = hamsters_with_rank(rank).size
-        items[rank] ||= 0
-        items[rank] += n / 10.0
-        items[rank] = [items[rank], 99].min
+    @seeds += 10
+  end
+
+  def use_item(rank)
+    num = items[rank].to_i
+    if num > 0
+      items[rank] = 0
+      if item_act = Hamster::Data.values[rank][:item_act]
+        num.times { item_act.call(self) }
       end
-    else
-      @foods = 0
     end
   end
 
@@ -60,14 +61,39 @@ class Player
     @wilds = 10
   end
 
-  def act(rank)
-    num = items[rank].to_i
-    if num > 0
-      items[rank] -= 1
-      if item_act = Hamster::Data.values[rank][:item_act]
-        item_act.call(self)
+  def harvest
+    @action_num -= 1
+    @foods += @seeds
+    @seeds = 10
+  end
+
+  def work
+    @action_num -= 1
+    eat
+    if @foods > 0
+      (0..10).each do |rank|
+        n = hamsters_with_rank(rank).size
+        items[rank] ||= 0
+        items[rank] += n / 10.0
+        items[rank] = [items[rank], 99].min
       end
     end
+  end
+
+  def battle
+    @action_num -= 1
+    eat
+    hams = field_hamsters
+    hams.shuffle!
+    (hams.size / 2).times do |i|
+      a = hams[i * 2]
+      b = hams[i * 2 + 1]
+      r = rand(3)
+      next if r == 0
+      a.add_exp
+      b.kill
+    end
+    hams.reject!(&:dead?)
   end
 
   def move_to_field(rank, num)
@@ -82,22 +108,6 @@ class Player
     self.hamsters += hams
   end
 
-  def battle
-    @action_num -= 1
-    hams = field_hamsters
-    hams.shuffle!
-    (hams.size / 2).times do |i|
-      a = hams[i * 2]
-      b = hams[i * 2 + 1]
-      r = rand(3)
-      next if r == 0
-      a.add_exp
-      b.kill
-    end
-    hams.reject!(&:dead?)
-    #hams.sort!
-  end
-
   def hamsters_with_rank(rank)
     hamsters.select {|e| e.rank == rank }
   end
@@ -109,6 +119,13 @@ class Player
   def create_hamster
     field_hamsters << Hamster.new(0, 0)
   end
+
+  private
+
+  def eat
+    @foods -= (@hamsters.size + @field_hamsters.size) / 100 + 1
+    @foods = [@foods, 0].max
+  end
 end
 
 class Hamster
@@ -119,7 +136,7 @@ class Hamster
     },
     タネ農家: {
       item: 'タネ',
-      item_act: lambda {|c| c.foods += 100 }
+      item_act: lambda {|c| c.seeds += 10 }
     },
     狩人: {
       item: '弓矢',

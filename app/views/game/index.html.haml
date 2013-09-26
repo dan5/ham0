@@ -16,9 +16,14 @@
   行動力: #{player.action_num}
 
 %p.commands
-  %span.command= link_to "仲間を探す(#{player.wilds})", '/game/hunt'
-  %span.command= link_to '生産する', '/game/update/1'
   %span.command= link_to 'バトル！', '/game/battle'
+  %span.command
+    - if player.foods > 0
+      = link_to '仕事をする', '/game/work'
+    - else
+      仕事をする
+  %span.command= link_to "仲間を探す(#{player.wilds})", '/game/hunt'
+  %span.command= link_to "収穫する(#{player.seeds})", '/game/harvest'
 
 %table.main
   %tr
@@ -36,7 +41,7 @@
               .items
                 - item_num = player.items[rank].to_i
                 - if item_num > 0
-                  = link_to "#{values[:item]}(#{item_num})", "/game/act/#{rank}"
+                  = link_to "#{values[:item]}(#{item_num})", "/game/use_item/#{rank}"
             %td.home.right
               .num= num = player.hamsters_with_rank(rank).size
               - if num > 0
