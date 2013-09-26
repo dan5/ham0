@@ -10,10 +10,15 @@
 %p
   とある国では頬袋により多くを入れるものが尊敬され地位を得るのだという
 
-%p
+%p.status
   食料: #{player.foods}
   総ハム数: #{player.hamsters.size + player.field_hamsters.size}
   行動力: #{player.action_num}
+
+%p.commands
+  %span.command= link_to "仲間を探す(#{player.wilds})", '/game/hunt'
+  %span.command= link_to '生産する', '/game/update/1'
+  %span.command= link_to 'バトル！', '/game/battle'
 
 %table.main
   %tr
@@ -47,11 +52,6 @@
                 = '---'
       
     %td.right_side
-      .commands
-        コマンド:
-        = link_to "仲間を探す(#{player.wilds})", '/game/hunt'
-        = link_to '生産する', '/game/update/1'
-        = link_to 'バトル!', '/game/battle'
       .field_area
         .center.large FIELD
         .hamstars

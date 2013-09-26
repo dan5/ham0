@@ -43,7 +43,7 @@ class Player
     @wilds += 10
     @foods -= (@hamsters.size + @field_hamsters.size) / 100 + 1
     if @foods > 0
-      (1..10).each do |rank|
+      (0..10).each do |rank|
         n = hamsters_with_rank(rank).size
         items[rank] ||= 0
         items[rank] += n / 10.0
@@ -61,7 +61,6 @@ class Player
   end
 
   def act(rank)
-    @action_num -= 1
     num = items[rank].to_i
     if num > 0
       items[rank] -= 1
@@ -114,7 +113,10 @@ end
 
 class Hamster
   Data = {
-    野良ハム: {},
+    野良ハム: {
+      item: '壺',
+      item_act: lambda {|c| c.wilds += 10 }
+    },
     タネ農家: {
       item: 'タネ',
       item_act: lambda {|c| c.foods += 100 }
