@@ -40,10 +40,15 @@ class Player
   def update
     @wilds += 10
     @foods -= (@hamsters.size + @field_hamsters.size) / 100 + 1
-    10.times do |rank|
-      n = hamsters_with_rank(rank).size
-      actions[rank] ||= 0
-      actions[rank] += n / 10.0
+    if @foods > 0
+      (1..10).each do |rank|
+        n = hamsters_with_rank(rank).size
+        actions[rank] ||= 0
+        actions[rank] += n / 10.0
+        actions[rank] = [actions[rank], 99].min
+      end
+    else
+      @foods = 0
     end
   end
 
@@ -53,7 +58,9 @@ class Player
   end
 
   def act(rank)
-    @wilds += 100
+    num = actions[rank].to_i
+    @wilds += num * 100
+    actions[rank] = 0
   end
 
   def move_to_field(rank, num)
