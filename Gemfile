@@ -45,3 +45,10 @@ end
 # gem 'debugger', group: [:development, :test]
 
 gem 'haml-rails'
+
+unless ENV["TERM_PROGRAM"] == "Apple_Terminal"
+  gem 'execjs'
+  gem 'therubyracer', '0.10.1'
+end
+
+
