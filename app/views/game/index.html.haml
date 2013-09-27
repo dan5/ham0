@@ -23,11 +23,13 @@
       %table.hamstar_rank
         %tr
           %th rank
+          %th job
           %th.town{width: 70} town
           %th.field{width: 70} field
         - Hamster::Data.each.with_index do |data, rank|
           - name, values = data
           %tr
+            %th= rank
             %th
               = name
               .items

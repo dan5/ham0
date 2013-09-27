@@ -86,7 +86,7 @@ class Player
     @action_num -= 1
     eat
     if @foods > 0
-      (0..10).each do |rank|
+      Hamster::Data.keys.size.times do |rank|
         n = hamsters_with_rank(rank).size
         items[rank] ||= 0
         items[rank] += n / 10.0
@@ -150,20 +150,20 @@ end
 
 class Hamster
   Data = {
-    野良ハム: {
+    新入り: {
       item: '壺',
       item_act: lambda {|c, num| c.wilds += 10 * num; num }
     },
-    タネ農家: {
+    タネ拾い: {
       item: 'タネ',
       item_act: lambda {|c, num| c.seeds += 10 * num; num }
     },
-    狩人: {
-      item: '弓矢',
-      item_act: lambda {|c, num| c.wilds += 100 * num; num }
+    石運び: {
+      item: '日銭',
+      item_act: lambda {|c, num| c.golds += 100 * num; num }
     },
-    スミス: {
-      item: '銅の剣',
+    刀鍛冶: {
+      item: 'こんぼう',
       item_act: lambda {|c, num|
         hams = c.field_hamsters.first(num)
         hams.each do |ham|
@@ -172,17 +172,44 @@ class Hamster
         hams.size
       }
     },
+    狩人: {
+      item: '弓矢',
+      item_act: lambda {|c, num| c.wilds += 100 * num; num }
+    },
     ドワーフ: {
+      str: 75,
       item: '金塊',
       item_act: lambda {|c, num| c.golds += 100 * num; num }
     },
-    猛獣使い: {},
-    足軽: {},
-    メイド: {},
-    戦士: {},
+    まじない師: {
+      item: '聖水',
+    },
+    #看護師: {},
+    # ゾンビ勝率50%
+    # ゾンビと引き分けたものはゾンビになる
+    # ディスペルを使うとゾンビをクランケに変えることが出来る
+    ゾンビ: {
+      item: '呪い',
+    },
+    #クランケ: {
+    #  str: 75,
+    #  item: '病気',
+    #},
+    #アイドル: {},
+
+    #執事: {},
+    #猛獣使い: {},
+    #足軽: {},
+    #メイド: {},
+    #戦士: {},
+    神官: {
+      item: 'ディスペル',
+    },
+    忍者: {
+      item: 'まきびし',
+    },
+    #将軍: {},
     遊び人: {},
-    将軍: {},
-    アイドル: {},
 
     キング: {
       item: '平和',
