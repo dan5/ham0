@@ -57,9 +57,12 @@ class Player
   def use_item(rank)
     num = items[rank].to_i
     if num > 0
-      items[rank] = 0
       if item_act = Hamster::Data.values[rank][:item_act]
-        num.times { item_act.call(self) }
+        if used_num = item_act.call(self, num)
+          items[rank] -= used_num
+        else
+          items[rank] = 0
+        end
       end
     end
   end
@@ -102,6 +105,7 @@ class Player
       b = hams[i * 2 + 1]
       r = rand(3)
       next if r == 0
+      a, b = b, a if rand(100) < 50 + b.str_plus - a.str_plus
       a.add_exp
       b.kill
     end
@@ -148,25 +152,30 @@ class Hamster
   Data = {
     野良ハム: {
       item: '壺',
-      item_act: lambda {|c| c.wilds += 10 }
-    },
-    スミス: {
-      item: '銅の剣',
-      item_act: lambda {|c| c.golds += 100 }
+      item_act: lambda {|c, num| c.wilds += 10 * num; num }
     },
     タネ農家: {
       item: 'タネ',
-      item_act: lambda {|c| c.seeds += 10 }
+      item_act: lambda {|c, num| c.seeds += 10 * num; num }
     },
     狩人: {
       item: '弓矢',
-      item_act: lambda {|c| c.wilds += 100 }
+      item_act: lambda {|c, num| c.wilds += 100 * num; num }
+    },
+    スミス: {
+      item: '銅の剣',
+      item_act: lambda {|c, num|
+        hams = c.field_hamsters.first(num)
+        hams.each do |ham|
+          ham.str_plus = 7 * 3
+        end
+        hams.size
+      }
     },
     ドワーフ: {
       item: '金塊',
-      item_act: lambda {|c| c.golds += 100 }
+      item_act: lambda {|c, num| c.golds += 100 * num; num }
     },
-
     猛獣使い: {},
     足軽: {},
     メイド: {},
@@ -177,7 +186,6 @@ class Hamster
 
     キング: {
       item: '平和',
-      #item_act: lambda {|c| c.golds += 100 }
     },
   }
 
@@ -190,18 +198,22 @@ class Hamster
   end
 
   def zip
-    p0 = rank * 3 + wins
-    p1 = str_plus
+    p0 = 48 + rank * 3 + wins
+    p1 = 48 + str_plus
     [p0, p1].pack("Cc")
   end
 
   def self.unzip(v)
-    p0, p1 = v.unpack("Cc")
+    p0, p1 = v.unpack("Cc").map {|e| e - 48 }
     Hamster.new(p0 / 3, p0 % 3, p1)
   end
 
   def display
-    str_plus == 0 ? wins.to_s : "#{wins}(#{str_plus})"
+    case
+    when str_plus == 0 then wins.to_s
+    when str_plus > 0 then "#{wins}(+#{str_plus})"
+    when str_plus < 0 then "#{wins}(#{str_plus})"
+    end
   end
 
   def dead?
